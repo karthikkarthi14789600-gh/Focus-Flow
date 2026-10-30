@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>FocusFlow — Nature & Calm Study Sanctuary</title>
+  <!-- Google Fonts: Cormorant Garamond for nature-journal accents, Plus Jakarta Sans & Caveat for handwriting -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;700&family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,400&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <!-- Ambient Nature Particles & Fog Effect -->
+  <div class="mist-layer" aria-hidden="true"></div>
+  <div class="nature-particles" id="natureParticles" aria-hidden="true"></div>
+
+  <!-- Main Sanctuary Container -->
+  <div class="sanctuary-shell">
+    
+    <!-- Top Sanctuary Header -->
+    <header class="sanctuary-header">
+      <div class="header-brand">
+        <span class="leaf-logo">🌿</span>
+        <div>
+          <h1 class="brand-title">FocusFlow</h1>
+          <span class="journal-sub">nature study sanctuary</span>
+        </div>
+      </div>
+      <div class="header-right">
+        <span class="date-capsule" id="currentDate"></span>
+        <div class="sound-quick-chip" id="soundQuickStatus">
+          <span class="sound-dot"></span>
+          <span id="quickSoundLabel">Ambient Sound</span>
+        </div>
+      </div>
+    </header>
+
+    <!-- SECTION 1: FOCUS-FIRST TIMER SECTION (Placed Prominently at Top) -->
+    <section class="sanctuary-panel timer-hero-panel" aria-label="Focus Timer Sanctuary">
+      <div class="botanical-accent-top">🍃 <em>gentle presence, quiet focus</em> 🍃</div>
+      
+      <!-- Duration Selector Pills & Custom Hours Selector -->
+      <div class="duration-control-wrapper">
+        <div class="duration-pills" role="radiogroup" aria-label="Select Focus Duration">
+          <button type="button" class="duration-btn" data-minutes="15">15 min</button>
+          <button type="button" class="duration-btn active" data-minutes="25">25 min</button>
+          <button type="button" class="duration-btn" data-minutes="45">45 min</button>
+          <button type="button" class="duration-btn" data-minutes="60">60 min</button>
+          <button type="button" class="duration-btn custom-toggle-btn" id="customDurationBtn">+ Custom Hours</button>
+        </div>
+
+        <!-- Custom Hours Expandable Bar -->
+        <div class="custom-hours-drawer" id="customHoursDrawer" style="display: none;">
+          <div class="custom-hours-inner">
+            <span class="custom-label">Study Duration:</span>
+            <div class="custom-inputs-row">
+              <label class="custom-unit-field">
+                <input type="number" id="customHoursInput" class="custom-num-input" min="0" max="12" value="2" step="1" aria-label="Hours" />
+                <span class="unit-txt">hrs</span>
+              </label>
+              <span class="unit-plus">+</span>
+              <label class="custom-unit-field">
+                <input type="number" id="customMinsInput" class="custom-num-input" min="0" max="59" value="0" step="5" aria-label="Minutes" />
+                <span class="unit-txt">min</span>
+              </label>
+              <button type="button" class="btn-sanctuary primary-action custom-apply-btn" id="applyCustomTimeBtn">Apply</button>
+            </div>
+            <!-- Quick hour presets -->
+            <div class="quick-hour-tags">
+              <button type="button" class="quick-tag-btn" data-hours="1.5">1.5 hr</button>
+              <button type="button" class="quick-tag-btn" data-hours="2">2 hrs</button>
+              <button type="button" class="quick-tag-btn" data-hours="3">3 hrs</button>
+              <button type="button" class="quick-tag-btn" data-hours="4">4 hrs</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Organic Timer Circular Display -->
+      <div class="timer-dial-container">
+        <svg class="timer-dial-svg" viewBox="0 0 220 220" aria-hidden="true">
+          <circle class="timer-circle-bg" cx="110" cy="110" r="96"></circle>
+          <circle class="timer-circle-progress" id="timerCircleProgress" cx="110" cy="110" r="96"></circle>
+        </svg>
+        <div class="timer-center-info">
+          <span class="timer-status-hint" id="timerStatusLabel">ready to begin</span>
+          <div class="timer-countdown" id="timerDisplay" aria-live="polite">25:00</div>
+          <div class="timer-focus-task" id="focusTaskName">Focus on your primary priority</div>
+        </div>
+      </div>
+
+      <!-- Timer Main Action Buttons -->
+      <div class="timer-controls">
+        <button type="button" class="btn-sanctuary primary-action" id="toggleTimerBtn">
+          <span class="btn-icon" id="toggleTimerIcon">▶</span>
+          <span id="toggleTimerText">Start Focus</span>
+        </button>
+        <button type="button" class="btn-sanctuary secondary-action" id="resetTimerBtn" title="Reset to start">
+          <span class="btn-icon">↺</span>
+          <span>Reset</span>
+        </button>
+      </div>
+
+      <!-- Ambient Audio Sanctuary Box -->
+      <div class="ambient-music-card" id="ambientCard">
+        <div class="ambient-card-top">
+          <div class="ambient-card-left">
+            <span class="ambient-icon" id="ambientMusicIcon">🎧</span>
+            <div>
+              <div class="ambient-title">Sanctuary Ambient Audio</div>
+              <div class="ambient-subtitle" id="ambientStatusText">Plays softly while timer is running</div>
+            </div>
+          </div>
+          <div class="ambient-toggle-container">
+            <button type="button" class="ambient-toggle-switch active" id="musicToggleBtn" aria-pressed="true" aria-label="Toggle ambient music">
+              <span class="switch-ball"></span>
+            </button>
+            <span class="switch-label" id="musicToggleText">Audio On</span>
+          </div>
+        </div>
+
+        <div class="ambient-card-bottom">
+          <!-- Ambient Sound Selector -->
+          <div class="sound-track-picker">
+            <label for="ambientSoundSelect" class="sound-picker-label">Soundscape:</label>
+            <select id="ambientSoundSelect" class="sanctuary-select">
+              <option value="lofi">Mountain Lake Lofi & Melodies</option>
+              <option value="rain">Misty Forest Rain & Water</option>
+              <option value="forest">Gentle Birdsong & Breeze</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <!-- Session Completed Warm Message (shows smoothly upon timer completion) -->
+      <div class="completion-banner" id="completionBanner" style="display: none;">
+        <span class="completion-leaf">🌿</span>
+        <div class="completion-content">
+          <strong>Lovely work. Every focused minute counts.</strong>
+          <p>Take a deep gentle breath, relax your shoulders, and sip some water before your next step.</p>
+        </div>
+        <button type="button" class="completion-close-btn" id="closeCompletionBtn" aria-label="Dismiss message">✕</button>
+      </div>
+    </section>
+
+
+    <!-- TWO-COLUMN SECTION: TASKS MANAGER (LEFT) & TODAY'S PROGRESS (RIGHT) -->
+    <div class="sanctuary-workspace-grid">
+      
+      <!-- TASK MANAGER SECTION -->
+      <section class="sanctuary-panel tasks-section" aria-label="Sanctuary Tasks">
+        <div class="panel-header-journal">
+          <div>
+            <h2 class="panel-journal-title">Your Intentions & Tasks</h2>
+            <p class="panel-journal-sub">Write down what matters, check it off with peace.</p>
+          </div>
+          <button type="button" class="btn-sanctuary primary-action" id="openAddBtn">
+            <span>＋</span> Add Intention
+          </button>
+        </div>
+
+        <!-- Task Search & Filter Row -->
+        <div class="task-filter-bar">
+          <div class="filter-pills" role="tablist">
+            <button class="filter-pill active" data-filter="all">All <span id="filterAllCount">0</span></button>
+            <button class="filter-pill" data-filter="pending">Pending <span id="filterPendingCount">0</span></button>
+            <button class="filter-pill" data-filter="completed">Completed <span id="filterCompletedCount">0</span></button>
+          </div>
+          <div class="search-wrap">
+            <input type="search" id="searchInput" class="sanctuary-search" placeholder="Search tasks..." aria-label="Search intentions" />
+          </div>
+        </div>
+
+        <!-- Task List Container -->
+        <div class="task-list-flow" id="taskList" role="list"></div>
+
+        <!-- Empty State -->
+        <div class="empty-journal-state" id="emptyState" style="display: none;">
+          <div class="empty-nature-icon">🌱</div>
+          <h3 id="emptyTitle">A clean, quiet page</h3>
+          <p id="emptyText">No intentions found. Plant a new goal to cultivate your day.</p>
+          <button type="button" class="btn-sanctuary secondary-action" id="emptyAddBtn">＋ Add your first task</button>
+        </div>
+      </section>
+
+      <!-- TODAY'S PROGRESS DASHBOARD -->
+      <aside class="sanctuary-panel progress-section" aria-label="Today's Progress">
+        <div class="panel-header-journal">
+          <h2 class="panel-journal-title">Today's Progress</h2>
+          <span class="journal-hand-tag">daily journal</span>
+        </div>
+        <p class="panel-journal-sub">Track mindful time and completed intentions.</p>
+
+        <!-- Metric Cards -->
+        <div class="metrics-column">
+          <!-- Metric 1: Tasks Completed Today -->
+          <div class="metric-journal-card">
+            <div class="metric-top">
+              <span class="metric-icon-wrap green">✓</span>
+              <span class="metric-label">Completed Today</span>
+            </div>
+            <div class="metric-value-row">
+              <strong class="metric-number" id="todayCompletedStat">0</strong>
+              <span class="metric-unit">tasks</span>
+            </div>
+            <div class="metric-caption" id="todayPendingCaption">0 intentions in progress</div>
+          </div>
+
+          <!-- Metric 2: Total Focus Minutes -->
+          <div class="metric-journal-card">
+            <div class="metric-top">
+              <span class="metric-icon-wrap earthy">⏳</span>
+              <span class="metric-label">Focus Time Today</span>
+            </div>
+            <div class="metric-value-row">
+              <strong class="metric-number" id="focusMinutesStat">0</strong>
+              <span class="metric-unit">minutes</span>
+            </div>
+            <div class="metric-caption">accumulated through deep work</div>
+          </div>
+
+          <!-- Metric 3: Daily Completion Rate with Circular Progress Ring -->
+          <div class="metric-journal-card circular-metric-card">
+            <div class="metric-top">
+              <span class="metric-icon-wrap sage">🌿</span>
+              <span class="metric-label">Completion Harmony</span>
+            </div>
+            <div class="ring-metric-body">
+              <div class="ring-container">
+                <svg class="progress-ring-svg" viewBox="0 0 100 100" aria-hidden="true">
+                  <circle class="ring-circle-bg" cx="50" cy="50" r="40"></circle>
+                  <circle class="ring-circle-val" id="progressRingBar" cx="50" cy="50" r="40"></circle>
+                </svg>
+                <div class="ring-text" id="ringPercentageText">0%</div>
+              </div>
+              <div class="ring-details">
+                <strong id="ringTasksSummary">0 of 0 done</strong>
+                <p>Every small effort is worthy. Be proud of taking steps forward.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Inspiring Nature Quote Card -->
+        <div class="nature-note-card">
+          <span class="pin-symbol">📌</span>
+          <p class="quote-text">“Adopt the pace of nature: her secret is patience.”</p>
+          <span class="quote-author">— Ralph Waldo Emerson</span>
+        </div>
+      </aside>
+
+    </div>
+
+    <!-- Sanctuary Footer -->
+    <footer class="sanctuary-footer">
+      <span>🍃 FocusFlow Study Sanctuary</span>
+      <span>•</span>
+      <span>Peaceful progress over perfection</span>
+    </footer>
+  </div>
+
+  <!-- MODAL: ADD / EDIT TASK -->
+  <div class="modal-backdrop" id="taskModal" aria-hidden="true">
+    <div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+      <div class="modal-head">
+        <div>
+          <span class="modal-tag">SANCTUARY JOURNAL</span>
+          <h2 id="modalTitle" class="modal-title">New Intention</h2>
+        </div>
+        <button type="button" class="modal-close" id="closeModalBtn" aria-label="Close modal">✕</button>
+      </div>
+
+      <form id="taskForm">
+        <div class="form-group">
+          <label for="taskTitle" class="form-label">What would you like to accomplish? <span>*</span></label>
+          <input type="text" id="taskTitle" class="form-input" placeholder="e.g. Read chapter 4 of organic chemistry" required maxlength="120" />
+        </div>
+
+        <div class="form-group">
+          <label for="taskDescription" class="form-label">Notes or thoughts <small>(optional)</small></label>
+          <textarea id="taskDescription" class="form-textarea" rows="3" placeholder="Add quiet details or reference notes..." maxlength="300"></textarea>
+        </div>
+
+        <div class="form-row-duo">
+          <div class="form-group">
+            <label for="taskPriority" class="form-label">Priority</label>
+            <select id="taskPriority" class="form-select">
+              <option value="medium">Medium Priority</option>
+              <option value="high">High Priority</option>
+              <option value="low">Gentle / Low Priority</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="taskDue" class="form-label">Target Date</label>
+            <input type="date" id="taskDue" class="form-input" />
+          </div>
+        </div>
+
+        <div class="form-error-msg" id="formError" role="alert"></div>
+
+        <div class="modal-footer-actions">
+          <button type="button" class="btn-sanctuary secondary-action" id="cancelModalBtn">Cancel</button>
+          <button type="submit" class="btn-sanctuary primary-action" id="saveTaskBtn">Save Intention <span>✓</span></button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- TOAST NOTIFICATION -->
+  <div class="toast-capsule" id="toast" role="status" aria-live="polite">
+    <span class="toast-leaf">🌿</span>
+    <span id="toastMessage">Intention added to your sanctuary</span>
+  </div>
+
+  <!-- AUDIO ELEMENTS (Reliable Ambient Streams & WebAudio Fallback) -->
+  <audio id="focusMusic" loop preload="auto">
+    <source src="https://feeds.soundcloud.com/stream/1159581277-unminus-open-minded.mp3" type="audio/mpeg" />
+  </audio>
+
+  <script src="script.js"></script>
+</body>
+</html>
